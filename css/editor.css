@@ -1,0 +1,26 @@
+/* =========================================================
+   NAIPO — éditeur de blocs
+   ========================================================= */
+
+/* Tout est visible dans l'éditeur (pas d'animation d'apparition). */
+.reveal,
+.reveal-zoom,
+.hero-stagger,
+.hero-stagger * {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Les sections de la page d'accueil sont pleine largeur. */
+.editor-styles-wrapper .is-root-container > * { max-width: none; }
+
+/* Aperçu des blocs NAIPO. */
+.naipo-block-preview { position: relative; }
+.naipo-block-preview .home-hero { min-height: 520px; }
+.naipo-block-preview .marquee-track { animation: none !important; }
+
+/* Le header fixe n'existe pas dans l'éditeur. */
+.editor-styles-wrapper .subpage-hero,
+.editor-styles-wrapper .home-hero { margin-top: 0 !important; }

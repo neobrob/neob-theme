@@ -1,0 +1,46 @@
+# Déploiement du thème NAIPO sur l'hébergement Infomaniak (FTP)
+# à chaque push sur la branche main, ou manuellement (onglet Actions → Run workflow).
+#
+# Secrets à créer dans GitHub : Settings → Secrets and variables → Actions
+#   FTP_SERVER     pgok.ftp.infomaniak.com
+#   FTP_USERNAME   l'utilisateur FTP
+#   FTP_PASSWORD   le mot de passe FTP
+#   FTP_THEME_DIR  dossier du thème sur le serveur, se terminant par /
+#                  ex. /wp-content/themes/naipo/  (selon le dossier racine du compte FTP)
+
+name: Déploiement FTP
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Vérifier la syntaxe PHP
+        run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l > /dev/null
+
+      - name: Envoyer le thème par FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftps
+          server-dir: ${{ secrets.FTP_THEME_DIR }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            README.md
+            .gitattributes
